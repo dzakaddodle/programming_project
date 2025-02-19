@@ -16,6 +16,10 @@ class DatabaseManager:
                         EMAIL TEXT UNIQUE,
                         PASSWORD TEXT
                     )""")
+            cursor.execute("""CREATE TABLE IF NOT EXISTS stocks(
+            TICKER TEXT,
+            NAME TEXT
+            )""")
             conn.commit()
 
     def add_user(self, name, email, password):

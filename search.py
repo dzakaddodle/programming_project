@@ -3,27 +3,44 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 # used this database - https://site.financialmodelingprep.com/developer/docs
-def filterBy(filter, keyword):
-    top = 10
-    exchange = "NASDAQ"
-    url = f"https://financialmodelingprep.com/api/v3/search?query={filter}&apikey={os.getenv('API_KEY')}"
-    #to search by ticker
-    if filter == 1:
-        #url = f"https://financialmodelingprep.com/api/v3/search-ticker?query={keyword}&limit={top}&exchange={exchange}&apikey={os.getenv('API_KEY')}"
-        #url = f"https://financialmodelingprep.com/api/v3/profile/{keyword}?apikey={os.getenv('API_KEY')}"
-    #to search by name
-    elif filter == 2:
-        url = f"https://financialmodelingprep.com/api/v3/search-name?query={keyword}&limit={top}&exchange={exchange}"
+def advancedFilter(sector, exchange,mktCapMax, mktCapMin, limit):
+    params = {
+        "marketCapMoreThan": mktCapMin, 
+        "marketCapLowerThan": mktCapMax,
+        "sector": sector,
+        "exchange": exchange,
+        "limit": limit
+              }
     
-    response = requests.get(url)
+    listOfSearched = []
+    #top = 10
+    #exchange = "NASDAQ"
+    url = f"https://financialmodelingprep.com/stable/company-screener?apikey={os.getenv('API_KEY')}"
+    #to search by ticker
+    # if filter == 1:
+    #     #url = f"https://financialmodelingprep.com/api/v3/search-ticker?query={keyword}&limit={top}&exchange={exchange}&apikey={os.getenv('API_KEY')}"
+    #     #url = f"https://financialmodelingprep.com/api/v3/profile/{keyword}?apikey={os.getenv('API_KEY')}"
+    # #to search by name
+    # elif filter == 2:
+    #     url = f"https://financialmodelingprep.com/api/v3/search-name?query={keyword}&limit={top}&exchange={exchange}"
+    
+    response = requests.get(url, params = params)
     data = response.json()
        
-    # for i, stock in enumerate(data):
-    #     print(f"Result: {i + 1}") 
-    #     print(f"Symbol: {stock['symbol']}")    
-    #     print(f"Name: {stock['name']}")
-    #     print(f"Currency: {stock['currency']}")
-    #     print(f"Stock Exchange: {stock['stockExchange']} \n")
+    for i, stock in enumerate(data):
+        listOfSearched.append(stock['symbol'])
+        print(f"Result: {i + 1}") 
+        print(f"Symbol: {stock['symbol']}")    
+        print(f"Name: {stock['companyName']}")
+        print(f"Market Cap: {stock['marketCap']}")
+        print(f"Sector: {stock['sector']}")
+        print(f"Price: {stock['price']}")
+        print(f"Volume: {stock['volume']}")
+        print(f"Exchange: {stock['exchange']}\n")
+        
+    return listOfSearched
+        
+    #print(data)
         
 def getSectors():
     sectors = [
@@ -47,7 +64,7 @@ def getSectors():
     return sectors
 
         
-#filterBy(1, "AAPL")
+filterBy("", "NASDAQ", 10000000000000, 10, 9)
 
 
 

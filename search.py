@@ -32,16 +32,7 @@ def advancedFilter(sector, exchange,mktCapMax, mktCapMin, limit):
               }
     
     listOfSearched = []
-    #top = 10
-    #exchange = "NASDAQ"
     url = f"https://financialmodelingprep.com/stable/company-screener?apikey={os.getenv('API_KEY')}"
-    #to search by ticker
-    # if filter == 1:
-    #     #url = f"https://financialmodelingprep.com/api/v3/search-ticker?query={keyword}&limit={top}&exchange={exchange}&apikey={os.getenv('API_KEY')}"
-    #     #url = f"https://financialmodelingprep.com/api/v3/profile/{keyword}?apikey={os.getenv('API_KEY')}"
-    # #to search by name
-    # elif filter == 2:
-    #     url = f"https://financialmodelingprep.com/api/v3/search-name?query={keyword}&limit={top}&exchange={exchange}"
     
     response = requests.get(url, params = params)
     data = response.json()
@@ -58,6 +49,35 @@ def advancedFilter(sector, exchange,mktCapMax, mktCapMin, limit):
         print(f"Exchange: {stock['exchange']}\n")
         
     return listOfSearched
+
+def getStockInfo(ticker):
+    url = f"https://financialmodelingprep.com/stable/profile?symbol={ticker}&apikey={os.getenv('API_KEY')}" 
+    response = requests.get(url)
+    stock = response.json()
+    data = stock[0]
+    
+    print(f"Symbol: {data['symbol']}")
+    print(f"Company Name: {data['companyName']}")
+    print(f"Website: {data['website']}")
+    print(f"Description: {data['description']}")  
+    print(f"Country: {data['country']}") 
+    print(f"Number of Full-Time Employees: {data['fullTimeEmployees']}") 
+    print(f"Price: {data['price']}")
+    print(f"Market Cap: {data['marketCap']}")
+    print(f"Beta: {data['beta']}")
+    print(f"Last Dividend: {data['lastDividend']}")
+    print(f"Range: {data['range']}")
+    print(f"Change: {data['change']}")
+    print(f"Change %: {data['changePercentage']}")
+    print(f"Volume: {data['volume']}")
+    print(f"Average Volume: {data['averageVolume']}")
+    print(f"Currency: {data['currency']}")
+    print(f"Sector: {data['sector']}")
+    print(f"Industry: {data['industry']}")
+    print(f"Exchange: {data['exchange']}\n")
+    
+    return ticker
+    
         
     #print(data)
         
@@ -82,9 +102,18 @@ def getSectors():
     
     return sectors
 
+def getExchanges():
+    exchanges = [
+        "NASDAQ",
+        "NYSE",
+        "AMEX"
+    ]
+    return exchanges
+
         
 #advancedFilter("", "NASDAQ", 10000000000000, 10, 9)
-nameSearch("A", None)
+#nameSearch("A", None)
+#getStockInfo("AAPL")
 
 
 

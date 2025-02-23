@@ -3,6 +3,25 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 # used this database - https://site.financialmodelingprep.com/developer/docs
+
+def nameSearch(keyword, limit):
+    url = f"https://financialmodelingprep.com/stable/search-symbol?query={keyword}&limit={limit}&apikey={os.getenv('API_KEY')}"
+    listOfSearched = []
+    response = requests.get(url)
+    data = response.json()
+    print(data)
+    
+    for i, stock in enumerate(data):
+        listOfSearched.append(stock['symbol'])
+        print(f"Result: {i + 1}") 
+        print(f"Symbol: {stock['symbol']}")    
+        print(f"Name: {stock['name']}")
+        print(f"Exchange: {stock['exchange']}\n")
+        
+    return listOfSearched
+
+
+
 def advancedFilter(sector, exchange,mktCapMax, mktCapMin, limit):
     params = {
         "marketCapMoreThan": mktCapMin, 
@@ -64,7 +83,8 @@ def getSectors():
     return sectors
 
         
-filterBy("", "NASDAQ", 10000000000000, 10, 9)
+#advancedFilter("", "NASDAQ", 10000000000000, 10, 9)
+nameSearch("A", None)
 
 
 

@@ -107,7 +107,7 @@ class StockMarket:
             
     #advancedFilter("", "NASDAQ", 10000000000000, 10, 9)
     #nameSearch("A", None)
-    #getStockInfo("AAPL")
+    
 
 def stockMain():
     session = StockMarket()
@@ -120,7 +120,7 @@ def stockMain():
     option = input("To proceed enter the option number: ")
 
     if option == "1" or option == "2":
-        if option == 1:
+        if option == "1":
             for sector in session.sectors:
                 print(sector)
         else:
@@ -169,17 +169,38 @@ def stockMain():
             except:
                 limit = None  
             results = session.advancedFilter(sector, exchange, mktMaxCap, mktMinCap, limit)
-        
+        print(results)
         print("What would you like to do next?")
         print("1. View more details on a stock listed")
         print("2. Go back to main menu")
         print("3. Quit")
         option = input("Type the option number you would like to do: ")
         if option == "1":
-            stockView(results)
+            stockView(session, results)
+        elif option == "2":
+            stockMain()
+        else:
+            pass
         
-def stockView(result):
-    pass
+def stockView(session, stocks):
+    stock = input("Enter the result number of the stock you want to view more information on: ")
+    
+    try:
+        stock = int(stock)
+        if 0 <= stock <= len(stocks):
+            session.getStockInfo(stocks[stock - 1])
+        else:
+            print("Input is not valid. Try again")
+            stockView(session, stocks)
+            
+    except:
+        print("Input is not valid. Try again")
+        stockView(session, stocks)
+        
+    
+#session = StockMarket()
+#session.getStockInfo("AAPL")       
+        
         
 
 stockMain()

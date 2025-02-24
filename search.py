@@ -102,7 +102,7 @@ class StockMarket:
         print(f"Industry: {data['industry']}")
         print(f"Exchange: {data['exchange']}\n")
         
-        return ticker
+        return data
 
             
     #advancedFilter("", "NASDAQ", 10000000000000, 10, 9)
@@ -188,7 +188,18 @@ def stockView(session, stocks):
     try:
         stock = int(stock)
         if 0 <= stock <= len(stocks):
-            session.getStockInfo(stocks[stock - 1])
+            stockInfo = session.getStockInfo(stocks[stock - 1])
+            print("What would you like to do now?")
+            print("1. Save Stock")
+            print("2. Search More Stocks")
+            print("3. Quit")
+            option = input("Enter the option number: ")
+            if option == "1":
+                saveStock(session, stockInfo)
+            elif option == "2":
+                stockMain()
+            else:
+                pass          
         else:
             print("Input is not valid. Try again")
             stockView(session, stocks)
@@ -201,7 +212,8 @@ def stockView(session, stocks):
 #session = StockMarket()
 #session.getStockInfo("AAPL")       
         
-        
+def saveStock(session, stock):
+    pass    
 
 stockMain()
         

@@ -31,12 +31,11 @@ class StockMarket:
             "AMEX"
         ]
         
-    def nameSearch(self, keyword, limit):
+    def nameSearch(self, keyword="", limit=None):
         url = f"https://financialmodelingprep.com/stable/search-symbol?query={keyword}&limit={limit}&apikey={self.api_key}"
         listOfSearched = []
         response = requests.get(url)
         data = response.json()
-        print(data)
         
         for i, stock in enumerate(data):
             listOfSearched.append(stock['symbol'])
@@ -49,7 +48,7 @@ class StockMarket:
 
 
 
-    def advancedFilter(self, sector, exchange,mktCapMax, mktCapMin, limit):
+    def advancedFilter(self, sector="", exchange="", mktCapMax=None, mktCapMin=None, limit=None):
         params = {
             "marketCapMoreThan": mktCapMin, 
             "marketCapLowerThan": mktCapMax,
@@ -110,7 +109,81 @@ class StockMarket:
     #nameSearch("A", None)
     #getStockInfo("AAPL")
 
+def stockMain():
+    session = StockMarket()
+    print("Searching Stock Market...")
+    print("Select one of the options below to begin: ")
+    print(" 1. See Available Sectors")  
+    print(" 2. See Available Stock Exchanges to Filter By")  
+    print(" 3. Search By Company Name/Ticker")  
+    print(" 4. Advanced Search Options") 
+    option = input("To proceed enter the option number: ")
 
+    if option == "1" or option == "2":
+        if option == 1:
+            for sector in session.sectors:
+                print(sector)
+        else:
+            for exchange in session.exchanges:
+                print(exchange)
+            
+        proceed = input("Would you like to continue (Y/N)?")
+        if proceed == "Y":
+            stockMain()
+        else:
+            pass
+    elif option == "3" or option == "4":
+        results = []
+        if option == "3":
+            keyword = input("Enter the Company Name or Ticker Name: ")
+            limit = input("If you want to limit the number of results enter a number (5 or below) or press enter to see all results.")
+            try:
+                limit = int(limit)
+                if not 0 <= limit <= 5:
+                    limit = None
+            except:
+                limit = None       
+            results = session.nameSearch(keyword, limit)
+        elif option == "4":
+            sector = input("Enter the sector you would like to search: ")
+            if sector not in session.sectors:
+                sector = ""
+            exchange = input("Enter the exchange you would like to search: ")
+            if exchange not in session.exchanges:
+                exchange = ""
+            mktMaxCap = input("Enter the max market cap you would like to search: ")
+            try:
+                mktMaxCap = int(mktMaxCap)
+            except:
+                mktMaxCap = None
+            mktMinCap = input("Enter the min market cap you would like to search: ")
+            try:
+                mktMinCap = int(mktMinCap)
+            except:
+                mktMinCap = None
+            limit = input("If you want to limit the number of results enter a number (5 or below) or press enter to see all results.")
+            try:
+                limit = int(limit)
+                if not 0 <= limit <= 5:
+                    limit = None
+            except:
+                limit = None  
+            results = session.advancedFilter(sector, exchange, mktMaxCap, mktMinCap, limit)
+        
+        print("What would you like to do next?")
+        print("1. View more details on a stock listed")
+        print("2. Go back to main menu")
+        print("3. Quit")
+        option = input("Type the option number you would like to do: ")
+        if option == "1":
+            stockView(results)
+        
+def stockView(result):
+    pass
+        
+
+stockMain()
+        
 
     # can get company information - based on quick searches
     # Use Screener Stock to search by market cap or sector
@@ -118,3 +191,5 @@ class StockMarket:
     #learn more about the different industries - all available industries api
     #all exchange options - all exchange options available
     #can potentially get all financial statements
+
+        

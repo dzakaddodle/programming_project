@@ -1,6 +1,7 @@
 import requests
 import os
 from dotenv import load_dotenv
+from web import Search
 # used this api - https://site.financialmodelingprep.com/developer/docs
 
 #class for any functions related to the stock market
@@ -84,6 +85,7 @@ class StockMarket:
 
     #get speicifc information on a stock
     def getStockInfo(self, ticker):
+        news = Search(ticker)
         url = f"https://financialmodelingprep.com/stable/profile?symbol={ticker}&apikey={self.api_key}" 
         response = requests.get(url)
         stock = response.json()
@@ -108,6 +110,8 @@ class StockMarket:
         print(f"Sector: {data['sector']}")
         print(f"Industry: {data['industry']}")
         print(f"Exchange: {data['exchange']}\n")
+        
+        news.news_scrape()
         
         return data
     
@@ -196,7 +200,7 @@ def stockView(session, stocks):
         stock = int(stock)
         if 0 <= stock <= len(stocks):
             stockInfo = session.getStockInfo(stocks[stock - 1])
-            print("What would you like to do now?")
+            print("\n What would you like to do now?")
             print("1. Save Stock")
             print("2. Search More Stocks")
             print("3. Quit")
@@ -213,23 +217,10 @@ def stockView(session, stocks):
             
     except:
         print("Input is not valid. Try again")
-        stockView(session, stocks)
-        
-    
-#session = StockMarket()
-#session.getStockInfo("AAPL")       
+        stockView(session, stocks)   
         
 def saveStock(session, stock):
     pass    
 
 stockMain()
-        
-
-    # can get company information - based on quick searches
-    # Use Screener Stock to search by market cap or sector
-    # can get very specific information on a company after selecting learn more
-    #learn more about the different industries - all available industries api
-    #all exchange options - all exchange options available
-    #can potentially get all financial statements
-
         

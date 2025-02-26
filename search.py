@@ -1,12 +1,16 @@
 import requests
 import os
 from dotenv import load_dotenv
-load_dotenv()
-# used this database - https://site.financialmodelingprep.com/developer/docs
+# used this api - https://site.financialmodelingprep.com/developer/docs
+
+#class for any functions related to the stock market
 class StockMarket:
     def __init__(self):
+        #load environment variables from .env file - specifically to get the api key
+        load_dotenv()
         self.api_key = os.getenv('API_KEY')
         
+        #list of sectors in the stock market
         self.sectors = [
         "Technology",
         "Health Care",
@@ -25,12 +29,14 @@ class StockMarket:
         "Consumer Services"
         ]
         
+        #list of exchanges that you can filter by
         self.exchanges = [
             "NASDAQ",
             "NYSE",
             "AMEX"
         ]
-        
+      
+    #search stock market for company name's or tickers that contain keyword entered  
     def nameSearch(self, keyword="", limit=None):
         url = f"https://financialmodelingprep.com/stable/search-symbol?query={keyword}&limit={limit}&apikey={self.api_key}"
         listOfSearched = []
@@ -47,7 +53,7 @@ class StockMarket:
         return listOfSearched
 
 
-
+    #More specific search for stocks that match sector, exchange, and market cap specified. Can also limit number of results given
     def advancedFilter(self, sector="", exchange="", mktCapMax=None, mktCapMin=None, limit=None):
         params = {
             "marketCapMoreThan": mktCapMin, 
@@ -76,6 +82,7 @@ class StockMarket:
             
         return listOfSearched
 
+    #get speicifc information on a stock
     def getStockInfo(self, ticker):
         url = f"https://financialmodelingprep.com/stable/profile?symbol={ticker}&apikey={self.api_key}" 
         response = requests.get(url)
@@ -103,12 +110,8 @@ class StockMarket:
         print(f"Exchange: {data['exchange']}\n")
         
         return data
-
-            
-    #advancedFilter("", "NASDAQ", 10000000000000, 10, 9)
-    #nameSearch("A", None)
     
-
+#method for stock market main menu
 def stockMain():
     session = StockMarket()
     print("Searching Stock Market...")
@@ -121,9 +124,11 @@ def stockMain():
 
     if option == "1" or option == "2":
         if option == "1":
+            print("Here are a list of sectors:")
             for sector in session.sectors:
                 print(sector)
         else:
+            print("Here is a list of stock exchanges that you can filter by:")
             for exchange in session.exchanges:
                 print(exchange)
             
@@ -145,10 +150,11 @@ def stockMain():
                 limit = None       
             results = session.nameSearch(keyword, limit)
         elif option == "4":
+            print("Fill out the form below. If you do not want to specify an option then press enter.")
             sector = input("Enter the sector you would like to search: ")
             if sector not in session.sectors:
                 sector = ""
-            exchange = input("Enter the exchange you would like to search: ")
+            exchange = input("Enter the exchange you would like to search1: ")
             if exchange not in session.exchanges:
                 exchange = ""
             mktMaxCap = input("Enter the max market cap you would like to search: ")
@@ -169,7 +175,6 @@ def stockMain():
             except:
                 limit = None  
             results = session.advancedFilter(sector, exchange, mktMaxCap, mktMinCap, limit)
-        print(results)
         print("What would you like to do next?")
         print("1. View more details on a stock listed")
         print("2. Go back to main menu")
@@ -182,6 +187,8 @@ def stockMain():
         else:
             pass
         
+
+#method for viewing specific stock menu        
 def stockView(session, stocks):
     stock = input("Enter the result number of the stock you want to view more information on: ")
     

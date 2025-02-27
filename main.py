@@ -1,33 +1,18 @@
-from database import DatabaseManager
+from database import DatabaseManager, UserManager, StockManager
 from users import User
+from searcher import StockMarket
+from menu import Menu
 
 db = DatabaseManager()
 db.create_tables()
-
-user = User()
-
-print('Hello and welcome to Programming Buddies!')
-not_logged_in = True
-while not_logged_in:
-    login = input("""Would you like to
-        [1] Login
-        [2] Create an account
-    """)
-    if login == '1':
-        login_pass = user.login()
-        if login_pass:
-            print(f"Hi {user.name}, you have successfully logged in. Welcome!")
-            not_logged_in = False
-        elif login_pass == 'wrong password':
-            print("Please relogin either with your new password or with your current password")
-        else:
-            print("Your email is not in our system. Please create an account instead")
-
-    elif login == '2':
-        not_logged_in = user.create_account()
-
-    else:
-        print("Wrong input. Please only enter in 1 or 2")
+user_manager = UserManager(db)
+stock_manager = StockManager(db)
 
 
+user = User(user_manager)
+search = StockMarket(stock_manager, user)
 
+menu = Menu(user, search, user_manager, stock_manager)
+while menu.not_logged_in:
+    menu.display()
+    menu.create_menu()

@@ -1,10 +1,9 @@
-from database import DatabaseManager
+from database import UserManager
 
 
 class User:
-    def __init__(self):
-        self.db = DatabaseManager()
-        self.email_list = ('gmail.com', 'yahoo.com', 'me.com', 'mac.com', 'outlook.com')
+    def __init__(self, user_manager):
+        self.user_manager = user_manager
         self.name = ''
         self.email = ''
         self.password = ''
@@ -15,7 +14,7 @@ class User:
         self.name = input("Name: ")
         self.email = input("Email: ")
         self.password = input("Password: ")
-        if self.db.add_user(name=self.name, password=self.password, email=self.email):
+        if self.user_manager.add_user(name=self.name, password=self.password, email=self.email):
             print("Your account has been successfully created!")
             return False
         else:
@@ -25,11 +24,11 @@ class User:
     def login(self):
         email = input("Email: ")
         password = input("Password: ")
-        if self.db.email_check(email) == 0:
+        if self.user_manager.email_check(email) == 0:
             return False
         else:
             if self.check_password(email, password):
-                self.name = self.db.get_name(email)
+                self.name = self.user_manager.get_name(email)
                 self.email = email
                 self.password = password
                 return True
@@ -37,13 +36,13 @@ class User:
                 print('You have entered the wrong password :(')
                 change_password_question = input("If you would like to change your password, type 1. Otherwise any other character will lead you back to the login page: ")
                 if change_password_question == '1':
-                    new_password = "What would you like your new password to be: "
-                    self.db.change_password(email, new_password)
+                    new_password = input("What would you like your new password to be: ")
+                    self.user_manager.change_password(email, new_password)
                     print("You have successfully changed your password! Please login again with your new password thanks")
                     return 'wrong password'
 
     def check_password(self, email, password):
-        database_password = self.db.get_password(email)
+        database_password = self.user_manager.get_password(email)
         if password == database_password:
             return True
         else:

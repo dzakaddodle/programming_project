@@ -40,20 +40,23 @@ class StockMarket:
         self.user = user
         self.stock_manager = stock_manager
 
-    # search stock market for company name's or tickers that contain keyword entered
+    #search stock market for company name's or tickers that contain keyword entered  
     def nameSearch(self, keyword="", limit=None):
         url = f"https://financialmodelingprep.com/stable/search-symbol?query={keyword}&limit={limit}&apikey={self.api_key}"
         listOfSearched = []
         response = requests.get(url)
         data = response.json()
-
+        
+        if not data:
+            print("No results found")
+            
         for i, stock in enumerate(data):
             listOfSearched.append(stock['symbol'])
-            print(f"Result: {i + 1}")
-            print(f"Symbol: {stock['symbol']}")
+            print(f"Result: {i + 1}") 
+            print(f"Symbol: {stock['symbol']}")    
             print(f"Name: {stock['name']}")
             print(f"Exchange: {stock['exchange']}\n")
-
+            
         return listOfSearched
 
     # More specific search for stocks that match sector, exchange, and market cap specified. Can also limit number of results given
@@ -72,6 +75,9 @@ class StockMarket:
         response = requests.get(url, params=params)
         data = response.json()
 
+        if not data:
+            print("No results found")
+            
         for i, stock in enumerate(data):
             listOfSearched.append(stock['symbol'])
             print(f"Result: {i + 1}")
@@ -140,7 +146,7 @@ class StockMarket:
                     print(exchange)
 
             proceed = input("Would you like to continue (Y/N)?")
-            if proceed == "Y":
+            if proceed == "Y" or proceed == "y":
                 self.stockMain()
             else:
                 pass
@@ -185,16 +191,25 @@ class StockMarket:
                     limit = None
                 results = session.advancedFilter(sector, exchange, mktMaxCap, mktMinCap, limit)
             print("What would you like to do next?")
-            print("1. View more details on a stock listed")
-            print("2. Go back to search menu")
-            print("3. Quit")
-            option = input("Type the option number you would like to do: ")
-            if option == "1":
-                self.stockView(session, results)
-            elif option == "2":
-                self.stockMain()
+            if not results:
+                print("1. Go back to main menu")
+                print("2. Quit")
+                option = input("Type the option number you would like to do: ")
+                if option == "1":
+                    self.stockMain()
+                else:
+                    pass
             else:
-                pass
+                print("1. View more details on a stock listed")
+                print("2. Go back to main menu")
+                print("3. Quit")
+                option = input("Type the option number you would like to do: ")
+                if option == "1":
+                    self.stockView(session, results)
+                elif option == "2":
+                    self.stockMain()
+                else:
+                    pass
 
 
     # method for viewing specific stock menu

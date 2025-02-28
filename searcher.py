@@ -131,7 +131,7 @@ class StockMarket:
         print("Select one of the options below to begin: ")
         print(" 1. See Available Sectors")
         print(" 2. See Available Stock Exchanges to Filter By")
-        print(" 3. Search By Company Name/Ticker")
+        print(" 3. Search By Ticker")
         print(" 4. Advanced Search Options")
         option = input("To proceed enter the option number: ")
 
@@ -153,7 +153,7 @@ class StockMarket:
         elif option == "3" or option == "4":
             results = []
             if option == "3":
-                keyword = input("Enter the Company Name or Ticker Name: ")
+                keyword = input("Enter the Ticker: ")
                 limit = input(
                     "If you want to limit the number of results enter a number (5 or below) or press enter to see all results.")
                 try:
@@ -168,7 +168,7 @@ class StockMarket:
                 sector = input("Enter the sector you would like to search: ")
                 if sector not in session.sectors:
                     sector = ""
-                exchange = input("Enter the exchange you would like to search1: ")
+                exchange = input("Enter the exchange you would like to search: ")
                 if exchange not in session.exchanges:
                     exchange = ""
                 mktMaxCap = input("Enter the max market cap you would like to search: ")

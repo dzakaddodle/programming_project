@@ -46,6 +46,9 @@ class StockMarket:
         response = requests.get(url)
         data = response.json()
         
+        if not data:
+            print("No results found")
+            
         for i, stock in enumerate(data):
             listOfSearched.append(stock['symbol'])
             print(f"Result: {i + 1}") 
@@ -72,6 +75,9 @@ class StockMarket:
         response = requests.get(url, params = params)
         data = response.json()
         
+        if not data:
+            print("No results found")
+            
         for i, stock in enumerate(data):
             listOfSearched.append(stock['symbol'])
             print(f"Result: {i + 1}") 
@@ -124,7 +130,7 @@ def stockMain():
     print("Select one of the options below to begin: ")
     print(" 1. See Available Sectors")  
     print(" 2. See Available Stock Exchanges to Filter By")  
-    print(" 3. Search By Company Name/Ticker")  
+    print(" 3. Search By Ticker")  
     print(" 4. Advanced Search Options") 
     option = input("To proceed enter the option number: ")
 
@@ -146,7 +152,7 @@ def stockMain():
     elif option == "3" or option == "4":
         results = []
         if option == "3":
-            keyword = input("Enter the Company Name or Ticker Name: ")
+            keyword = input("Enter Ticker Name: ")
             limit = input("If you want to limit the number of results enter a number (5 or below) or press enter to see all results.")
             try:
                 limit = int(limit)
@@ -160,7 +166,7 @@ def stockMain():
             sector = input("Enter the sector you would like to search: ")
             if sector not in session.sectors:
                 sector = ""
-            exchange = input("Enter the exchange you would like to search1: ")
+            exchange = input("Enter the exchange you would like to search: ")
             if exchange not in session.exchanges:
                 exchange = ""
             mktMaxCap = input("Enter the max market cap you would like to search: ")
@@ -182,16 +188,25 @@ def stockMain():
                 limit = None  
             results = session.advancedFilter(sector, exchange, mktMaxCap, mktMinCap, limit)
         print("What would you like to do next?")
-        print("1. View more details on a stock listed")
-        print("2. Go back to main menu")
-        print("3. Quit")
-        option = input("Type the option number you would like to do: ")
-        if option == "1":
-            stockView(session, results)
-        elif option == "2":
-            stockMain()
+        if not results:
+            print("1. Go back to main menu")
+            print("2. Quit")
+            option = input("Type the option number you would like to do: ")
+            if option == "1":
+                stockMain()
+            else:
+                pass
         else:
-            pass
+            print("1. View more details on a stock listed")
+            print("2. Go back to main menu")
+            print("3. Quit")
+            option = input("Type the option number you would like to do: ")
+            if option == "1":
+                stockView(session, results)
+            elif option == "2":
+                stockMain()
+            else:
+                pass
         
 
 #method for viewing specific stock menu        

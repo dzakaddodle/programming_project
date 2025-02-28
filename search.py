@@ -4,6 +4,8 @@ from dotenv import load_dotenv
 from web import Search
 # used this api - https://site.financialmodelingprep.com/developer/docs
 
+
+#apple doesn't work - need to do error handling and take out see more detail option
 #class for any functions related to the stock market
 class StockMarket:
     def __init__(self):
@@ -137,7 +139,7 @@ def stockMain():
                 print(exchange)
             
         proceed = input("Would you like to continue (Y/N)?")
-        if proceed == "Y":
+        if proceed == "Y" or proceed == "y":
             stockMain()
         else:
             pass
@@ -220,6 +222,7 @@ def stockView(session, stocks):
         stockView(session, stocks)   
         
 def saveStock(session, stock):
+    print(stock)
     pass    
 
 stockMain()

@@ -1,5 +1,6 @@
 from web import Search
 from saved_tickers import Stocks
+from pandas_api import Graphs
 
 
 class Menu:
@@ -46,9 +47,10 @@ class Menu:
             print("1. Search for Stocks")
             print("2. Saved Stocks")
             print("3. Get News")
-            print("4. Exit")
+            print("4. Get Historical Price Graph")
+            print("5. Exit")
 
-            choice = input("Choose an option (1-4): ").strip()
+            choice = input("Choose an option (1-5): ").strip()
 
             if choice == '1':
                 self.search.stockMain()
@@ -59,10 +61,14 @@ class Menu:
                 news_searcher = Search(ticker)
                 news_searcher.news_scrape()
             elif choice == '4':
+                ticker = input("Please type the ticker that you want to make a graph for: ")
+                graph = Graphs(ticker)
+                graph.get_graph()
+            elif choice == '5':
                 print("Thank for using Programming Buddies GOODBYE!")
                 self.exit = True
             else:
-                print("Invalid choice. Please choose a valid option (1-4).")
+                print("Invalid choice. Please choose a valid option (1-5).")
 
     def favourited_stocks(self):
         print("Showing your saved stocks.")
